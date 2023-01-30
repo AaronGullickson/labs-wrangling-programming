@@ -67,14 +67,12 @@ One important aspect of writing good code is maintaining a consistent style in h
 
 We will work with a few additional libraries for this project. In addition, I want all students to be able to knit their final R Markdown report to a PDF which will require the installation of `tinytex` on your system. The libraries we will use are:
 
-1. `readr` - A tidyverse package for reading in ascii text in either delimited or fixed-width format.
+1. `tidyverse` - The tidyverse package actually contains eight separate packages that we will use. Most importantly it contains the `readr` package for reading in text-based data and `ggplot2` for plotting. It also contains other functions that will assist with data cleaning and wrangling.
 2. `rmarkdown` - A package that lets use R Markdown files in RStudio and knit them to PDF documents.
 3. `texreg` - A package for output the results of statistical models in a nice format.
 4. `tinytex` - A package that will help you install a light-weight TeX distribution on your computer so you can properly knit R Markdown files to PDF.
-5. `reshape2` - A package for reshaping data between long and wide formats.
-6. `ggplot2` - A package for making graphs.
 
-If you are on an OSX system, you may need to run the following commands in the Terminal for tinytex to work on your system:
+If you are on an OSX system, you may need to run the following commands in the Terminal for tinytex to work on your system (Update: I don't believe this is needed any longer, but I am leaving it here in case people encounter problems):
 
 ```bash
 sudo chown -R `whoami`:admin /usr/local/bin
@@ -87,11 +85,16 @@ For all users, in order to install these packages on your system, just source in
 
 The purpose of this first assignment is just to familiarize yourself with the git approach to version control and to get your local repository set up for future assignments. You should follow these steps.
 
-1. Clone the git repository to your own computer. See instructions below.
-2. Change the lines that says "Your Name Here" on both the `read_raw_data.R` and `organize_data.R` script to your name.
-3. Commit the changes from the two files changed in (2) above as well as the Rproj file created when you set up a project in RStudio to your local repository.
-4. Push these changes back to the origin repository on GitHub.
-5. Open a new issue in your GitHub repository and write a comment including @AaronGullickson indicating that you have completed the assignment.
+1. Clone the repository to your local machine through RStudio by creating an R project.
+2. Commit the *.Rproj file that you just made with the commit message "Create R project"
+3. Change "Your Name Here" to your name in the following documents:
+    * read_raw_data.R
+    * organize_data.R
+    * analysis.R
+    * report.Rmd
+4. Commit the name changes you just made with the commit message "Change researcher name"
+5. Open and source the "check_packages.R" script. This will install required libraries and a tex package. It may take a little time the first time you run it.
+5. Go to your repository on the GitHub classroom page. Confirm that the commits you made are showing here. If so, use the Issues tab in your repository to start a new issue entitled "Using Git Lab Assignment Ready" and mention me with @AaronGullickson in the body of the message.
 
 ### Cloning the Repository
 
@@ -193,7 +196,7 @@ After creating this variable, you should run some diagnostic checks to make sure
 
 ### Tract Data
 
-We want to sum up the numbers across tracts for each metro area and then use those raw counts to construct several variables. The first step will be to aggregate values up to the metro-area level. This can be done fairly easily with the `aggregate` command (hint: the `cbind` command will help you do this for multiple variables at the same time). Note that if you aggregate across both `met2013` and `met_name`, you wil get both metro-area numeric ids and names in your aggregated data.
+We want to sum up the numbers across tracts for each metro area and then use those raw counts to construct several variables. The first step will be to aggregate values up to the metro-area level. This can be done fairly easily with the the `group_by` and `summarize` commands. Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data.
 
 Once you have the data aggregated to the metro area, construct the following four variables:
 
@@ -217,7 +220,7 @@ Our first step is to aggregate the individual level IPUMS data to the metro area
 - `black_n`: the number of black respondents in the sample for the given metro area.
 - `white_n`: the number of white respondents in the sample for the given metro area.
 
-In order to do this, you will need to use the `aggregate` command to aggregate to the metro area, but you will need different aggregate commands for the SEI means and for the counts by race. You can then use `dcast` and `merge` to reshape datasets and merge them. 
+In order to do this, you will need to use the `group_by` and `summarize` commands to aggregate to the metro area by race. Remember that `n()` in the summarize command will give you the number of cases in that grouping. Note that `summarize` cannot directly give you the SEI difference. It will instead give you the means by group which you can then use to calculate `seidiff`.
 
 ### Merging with aggregated tract level data
 
@@ -236,7 +239,7 @@ The PDF document in this repository entitled "calculate_dissimilarity.pdf" gives
 For this assignment, I want you to calculate *D* for each metropolitan area. You will need to use the tract-level dataset to calculate this measure. You should write this code in the `organize_data.R` script under the "Calculate Dissimilarity Index" section. You must do the following:
 
 1. Create a calculate_dissimilarity function that when given a dataset of tracts, will compute the dissimilarity index and return the results.
-2. A for-loop or `sappy` command that uses the function above to actually calculate dissimilarity for each metropolitan area.
+2. A for-loop or `sapply` command that uses the function above to actually calculate dissimilarity for each metropolitan area.
 3. Create a data.frame of dissimilarity indices rom the results of (2). This dataset should have two variables: 
     1. `met2013` to identify metropolitan areas 
     2. `dissim_index` for the actual dissimilarity index in each metropolitan area.
