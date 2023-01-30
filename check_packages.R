@@ -1,14 +1,9 @@
 # This script will check for and install if neccesary and packages required for
 # the project
 
-if(!require("readr")) {
-  install.packages("readr")
-  library(readr)
-}
-
-if(!require("reshape2")) {
-  install.packages("reshape2")
-  library(reshape2)
+if(!require("tidyverse")) {
+  install.packages("tidyverse")
+  library(tidyverse)
 }
 
 if(!require("rmarkdown")) {
@@ -26,11 +21,6 @@ if(!require("texreg")) {
 if(!require("tinytex")) {
   install.packages("tinytex")
   library(tinytex)
-}
-
-if(!require("ggplot2")) {
-  install.packages("ggplot2")
-  library(ggplot2)
 }
 
 #install tiny tex if not found
