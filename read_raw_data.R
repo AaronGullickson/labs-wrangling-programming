@@ -34,7 +34,7 @@ library(readr)
 # add the metro area identifier (met2013) based on the State and County ID of
 # the tract.
 county_cbsa_crosswalk <- read_csv("input/counties2cbsa.csv")
-tracts <- tracts %>%
+tracts <- tracts |>
   left_join(county_cbsa_crosswalk)
 
 # subset the data to remove any tracts with a missing met2013 id and drop 
