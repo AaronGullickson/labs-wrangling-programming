@@ -246,10 +246,10 @@ Where $a_i$ is the number of group a members that live in census tract $i$ and $
 
 Here are the following logical steps that need to be performed to calculate the dissimilarity index:
 
-1. Calculate the total number of $A$ and $B$ members in the city.
-2. Divide the number of each group in a given neighborhood ($a_i$ and $b_i$) by the total. This basically gives you the distribution of each group across neighborhoods.
-3. Subtract one of the distributions from (2) from the other and take the absolute value.
-4. Sum up the values from (3) and multiply by 50.
+1.  Calculate the total number of $A$ and $B$ members in the city.
+2.  Divide the number of each group in a given neighborhood ($a_i$ and $b_i$) by the total. This basically gives you the distribution of each group across neighborhoods.
+3.  Subtract one of the distributions from (2) from the other and take the absolute value.
+4.  Sum up the values from (3) and multiply by 50.
 
 For this assignment, I want you to calculate *D* for each metropolitan area. You will need to use the tract-level dataset to calculate this measure. You should write this code in the `organize_data.R` script under the "Calculate Dissimilarity Index" section. You must do the following:
 
