@@ -59,7 +59,7 @@ I will evaluate assignment using a GitHub feature called a **pull request**. Thi
 One important aspect of writing good code is maintaining a consistent style in how you write this code. This can include things like how long a single line can be, how you label variable names, how you use comments, where you put spaces, etc. In order to start working toward style consistency, I would like you to follow these rules in your coding syntax for this assignment:
 
 1. **Length of a line of code**. A single line of code should only be about 80 characters long. You can use the length of the sectioning comments as a rough guideline. To ensure that you stay roughly within that limit, you can turn on the "show margin" option in the RStudio preferences under Code > Display. If your code is longer than this, be sure to use multiple lines with proper indentation. The "control+i" keystroke will fix indentation for you on multi-line commands.
-2. **Variable names**. All variables should have lower case names and should not include spaces or special characters. Use the underscore (_) to simulate spacing. Do not start variable names with a number. Variable names should be no longer than 20 characters.
+2. **Variable names**. All variables should have lower case names and should not include spaces or special characters. Use the underscore (_) to simulate spacing. Do not start variable names with a number. Variable names should be no longer than 20 characters. Be consistent in naming practices.
 3. **Category names**. The names of categories in factor variables should be no longer than 20 characters.
 4. **Spacing**. Always put a single space between assignment operators (e.g. `<-`) and after commas.
 
@@ -144,7 +144,7 @@ One nice feature of the IPUMS site, is that you can revise extracts on the downl
 
 ### Read in the Raw Data
 
-You will need to write code in the `read_raw_data.R` script that reads in the fixed-width datasets you just downloaded. There is a section each for the IPUMS and tract data.
+You will need to write code in the `organize_data.R` script that reads in the fixed-width datasets you just downloaded. There is a section each for the IPUMS and tract data. You will also need to do some post-read dataset clean up.
 
 #### Reading in the IPUMS Data
 
@@ -152,7 +152,7 @@ The IPUMS data is in fixed-width format. The codebook should provide you with th
 
 Note that all of the IPUMS variables are coded as numeric values. You need to use the codebook to see which categories these numbers correspond to in cases of categorical variables. There is no need to recode them as factors for this assignment as we will create our own categorical variables in the next assignment.
 
-Be sure that all of your variables have good variable names following the syntax rules [outlined above](#code-syntax). Furthermore, to shrink our dataset a little bit, I would like you to subset it so that only cases with a valid `met2013` and `sei` value (i.e. non-zero value) are kept.
+Be sure that all of your variables have good variable names following the syntax rules [outlined above](#code-syntax). Furthermore, to tidy up our dataset, I would like you to subset it so that only cases with a valid `met2013` and `sei` value (i.e. non-zero value) are kept.
 
 #### Reading in the Tract Data
 
@@ -160,14 +160,14 @@ The tract data is in CSV format so it should be easier to load into R. Keep in m
 
 After you have read in the tract data, I would like you to run the code that is already present in the script to assign metropolitan area ids to each tract. These will not be provided in the data from Social Explorer, but can be determined by cross-referencing state and county ids with metropolitan statistical area ids, which is what this code does. You should then remove any tracts with a missing value on met2013 id, because these tracts do not belong to metropolitan statistical areas.
 
-One annoying thing about the Social Explorer data is the non-intuitive nature of the variable names. There are also a lot of variables that we do not need. I would like you to keep only the following variables and to rename them to something more intuitive. You can look in your codebook and use a `head` command on your tracts to deduce where these variables are.
+One annoying thing about the Social Explorer data is the non-intuitive nature of the variable names. There are also a lot of variables that we do not need. I would like you to keep only the following variables and to rename them to something more intuitive. You can look in your codebook and use the data viewer in RStudio to deduce where these variables are.
 
 - The metropolitan id already named `met2013`. Please keep this name as we will use it to merge datasets later.
 - The metropolitan name named `met_name`. Keep this name.
-- total population in the tract
-- total population of non-Hispanic whites
-- total population of non-Hispanic blacks
-- total population over the age of 25. This is used as the denominator for the educational categories that follow
+- total population in the tract.
+- total population of non-Hispanic whites.
+- total population of non-Hispanic blacks.
+- total population over the age of 25. This is used as the denominator for the educational categories that follow.
 - total population over the age of 25 with bachelor's degree.
 - total population over the age of 25 with master's degree.
 - total population over the age of 25 with professional degree.
