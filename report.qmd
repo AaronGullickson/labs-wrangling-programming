@@ -5,11 +5,13 @@ format: pdf
 editor: source
 execute:
   echo: false
+  warning: false
+  message: false
 ---
 
 ```{r}
 #| label: setup
-#| include: FALSE
+#| include: false
 #load("output/met_area.RData")
 library(ggplot2)
 library(texreg)
@@ -31,28 +33,29 @@ Show how the key independent and dependent variables are distributed. Use graphi
 
 ```{r}
 #| label: fig-template
-#| fig-cap: A caption
+#| fig-cap: A Caption
 
-# Code for the figure below. You should change the label from "fig-template" to something relevant but it should start with "fig-". You can then reference this figure in the tex with @fig-{whatever-you-called-it}
+# Code for the figure below. You should change the label from "fig-template" to something relevant but it should start with "fig-". You can then reference this figure in the tex with @fig-whatever-you-called-it
 
 # Each figure should go in a separate code chunk.
+# replace this code with a real figure
+ggplot(mtcars, aes(x=cyl, y=mpg))+
+  geom_point()+
+  theme_bw()
 ```
 
-```{r regression_template, echo=FALSE, results='asis'}
+```{r}
 #| label: tbl-reg
+#| tbl-cap: A Caption
 #| results: asis
-#| eval: false
 
-# change `eval` to true above or remove that line to execute this code chunk.
-
-# build your models here
-model1 <- lm()
-model2 <- lm()
-model3 <- lm()
+# build your models here - change these
+model1 <- lm(mpg~cyl+disp, data=mtcars)
+model2 <- lm(mpg~cyl+disp+hp, data=mtcars)
+model3 <- lm(mpg~cyl+disp+hp+wt, data=mtcars)
 
 #to print to screen replace texreg with screenreg
 texreg(list(model1, model2, model3),
-        caption="Your caption here",
         #custom.coef.names = c("Covariate labels here"), #uncomment to add nice labels to independent variables
         digits = 3,
         caption.above=TRUE, 
