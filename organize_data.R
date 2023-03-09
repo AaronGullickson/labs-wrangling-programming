@@ -40,15 +40,17 @@ library(tidyverse)
 # after loading in the tract data, please run the lines of code below. It will
 # add the metro area identifier (met2013) based on the State and County ID of
 # the tract.
-county_cbsa_crosswalk <- read_csv("input/counties2cbsa.csv")
-tracts <- tracts |>
-  left_join(county_cbsa_crosswalk)
+tracts <- read_csv("input/nber/cbsa2fipsxw.csv",
+                 col_types = cols(fipsstatecode = "i", fipscountycode = "i")) |>
+  filter(metropolitanmicropolitanstatis=="Metropolitan Statistical Area") |>
+  select(cbsacode, cbsatitle, fipsstatecode, fipscountycode) |>
+  rename(met2013=cbsacode, met_name=cbsatitle, Geo_STATE=fipsstatecode,
+         Geo_COUNTY=fipscountycode) |>
+  right_join(tracts)
 
-# subset the data to remove any tracts with a missing met2013 id and drop 
-# variables we don't need
-
-
-# provide better variable names for remaining variables
+# 1. subset the data to remove any tracts with a missing met2013 id.
+# 2. drop variables we don't need.
+# 3. provide better variable names for remaining variables
 
 
 # aggregate tracts into metro area level data by summing
