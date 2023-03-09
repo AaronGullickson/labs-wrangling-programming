@@ -12,7 +12,7 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
-#load("output/met_area.RData")
+load("output/met_area.RData")
 library(ggplot2)
 library(texreg)
 ```
