@@ -9,7 +9,7 @@
 -   [R Markdown Assignment](#r-markdown-assignment)
 -   [References](#references)
 
-## Introduction {#introduction}
+## Introduction
 
 The rest of the lab assignments for the term are going to work towards doing a full statistical analysis. We will use the same git repository for each component of this project and you will use the GitHub issues tab to open a new issue when you complete an assignment.
 
@@ -40,7 +40,7 @@ We will develop this project over multiple exercises. Here is an overview of the
 3.  Clean, recode, and aggregate the data up to the metro-level area.
 4.  Merge the dataset from Social Explorer with the dataset from IPUMS.
 5.  Calculate the dissimilarity index for each metro area and merge this into the data from (4). We now have a final analytical dataset.
-6.  Conduct the analysis on the analytical dataset, and write up a report of your analysis in R Markdown with tables and figures.
+6.  Conduct the analysis on the analytical dataset, and write up a report of your analysis in Quarto with tables and figures.
 
 Further instructions for each of these assignments are provided below.
 
@@ -54,7 +54,7 @@ I will evaluate assignment using a GitHub feature called a **pull request**. Thi
 2.  Use the "Merge Pull Request" at the bottom of the GitHub pull request on your browser to merge the pull request. If this button is red, then do not merge the pull request. This indicates that the code in the pull request conflicts with changes you have made. If this is the case, then alert me by mentioning @AaronGullickson in a comment on the pull request.
 3.  One the pull request has been merged, you need to pull down the changes to your local repository using the git tab in RStudio.
 
-#### Code Syntax {#code-syntax}
+#### Code Syntax
 
 One important aspect of writing good code is maintaining a consistent style in how you write this code. This can include things like how long a single line can be, how you label variable names, how you use comments, where you put spaces, etc. In order to start working toward style consistency, I would like you to follow these rules in your coding syntax for this assignment:
 
@@ -65,23 +65,17 @@ One important aspect of writing good code is maintaining a consistent style in h
 
 #### Required Libraries
 
-We will work with a few additional libraries for this project. In addition, I want all students to be able to knit their final R Markdown report to a PDF which will require the installation of `tinytex` on your system. The libraries we will use are:
+We will work with a few additional libraries for this project. In addition, I want all students to be able to knit their Quarto document to a PDF which will require the installation of `tinytex` on your system. The libraries we will use are:
+
+
 
 1.  `tidyverse` - The tidyverse package actually contains eight separate packages that we will use. Most importantly it contains the `readr` package for reading in text-based data and `ggplot2` for plotting. It also contains other functions that will assist with data cleaning and wrangling.
-2.  `rmarkdown` - A package that lets use R Markdown files in RStudio and knit them to PDF documents.
-3.  `texreg` - A package for output the results of statistical models in a nice format.
-4.  `tinytex` - A package that will help you install a light-weight TeX distribution on your computer so you can properly knit R Markdown files to PDF.
-
-If you are on an OSX system, you may need to run the following commands in the Terminal for tinytex to work on your system (Update: I don't believe this is needed any longer, but I am leaving it here in case people encounter problems):
-
-``` bash
-sudo chown -R `whoami`:admin /usr/local/bin
-~/Library/TinyTeX/bin/x86_64-darwin/tlmgr path add
-```
+2.  `texreg` - A package for output the results of statistical models in a nice format.
+3. `gt` - A package for making nice tables.
 
 For all users, in order to install these packages on your system, just source in the `check_packages.R` script included in this repository.
 
-## Understanding Git {#understanding-git}
+## Understanding Git
 
 The purpose of this first assignment is just to familiarize yourself with the git approach to version control and to get your local repository set up for future assignments. You should follow these steps.
 
@@ -91,7 +85,7 @@ The purpose of this first assignment is just to familiarize yourself with the gi
     -   read_raw_data.R
     -   organize_data.R
     -   analysis.R
-    -   report.Rmd
+    -   report.qmd
 4.  Commit the name changes you just made with the commit message "Change researcher name"
 5.  Open and source the "check_packages.R" script. This will install required libraries and a tex package. It may take a little time the first time you run it.
 6.  Go to your repository on the GitHub classroom page. Confirm that the commits you made are showing here. If so, use the Issues tab in your repository to start a new issue entitled "Using Git Lab Assignment Ready" and mention me with @AaronGullickson in the body of the message.
@@ -104,7 +98,7 @@ Once you have done this, the easiest way to clone the repository is by setting u
 
 Alternatively, you could have used the command line to clone the repository but this would not set up a project in RStudio which gives you the git functionality within RStudio.
 
-## Reading and Writing Data Assignment {#reading-and-writing-data-assignment}
+## Reading and Writing Data Assignment
 
 For this assignment, you will need to create a data extract from the Social Explorer dataset and the IPUMS website and then write R code that will read these data extracts into R.
 
@@ -162,7 +156,7 @@ Be sure that all of your variables have good variable names following the syntax
 
 The tract data is in CSV format so it should be easier to load into R. Keep in mind that if you did as instructed above and added labels in the first row of the CSV, you will need to skip a row when you read in the CSV.
 
-After you have read in the tract data, I would like you to run the code that is already present in the script to assign metropolitan area ids to each tract. These will not be provided in the data from Social Explorer, but can be determined by cross-referencing state and county ids with metropolitan statistical area ids, which is what this code does. You should then remove any tracts with a missing value on met2013 id, because these tracts do not belong to metropolitan statistical areas.
+After you have read in the tract data, I would like you to run the code that is already present in the script to assign metropolitan area ids to each tract. These will not be provided in the data from Social Explorer, but can be determined by cross-referencing state and county ids with metropolitan statistical area ids, which is what this code does (the file we are using to do it is called a "crosswalk" file). You should then remove any tracts with a missing value on met2013 id, because these tracts do not belong to metropolitan statistical areas.
 
 One annoying thing about the Social Explorer data is the non-intuitive nature of the variable names. There are also a lot of variables that we do not need. I would like you to keep only the following variables and to rename them to something more intuitive. You can look in your codebook and use the data viewer in RStudio to deduce where these variables are.
 
@@ -180,7 +174,7 @@ One annoying thing about the Social Explorer data is the non-intuitive nature of
 -   total number of persons unemployed
 -   total number of persons foreign-born
 
-## Cleaning Data Assignment {#cleaning-data-assignment}
+## Cleaning Data Assignment
 
 For this assignment, you will take the two datasets produced in the last assignment and code some new variables. For the tract data you will also need to aggregate to the metro-level before coding variables. For this assignment you will complete the two sections under the "Organize IPUMS data" and "Organize tract data" headings in the `organize_data.R` script.
 
@@ -200,16 +194,14 @@ After creating this variable, you should run some diagnostic checks to make sure
 
 ### Tract Data
 
-We want to sum up the numbers across tracts for each metro area and then use those raw counts to construct several variables. The first step will be to aggregate values up to the metro-area level. This can be done fairly easily with the the `group_by` and `summarize` commands. Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data.
-
-Once you have the data aggregated to the metro area, construct the following four variables:
+We want to aggregate the tract data for each metro area to construct four variables. 
 
 -   `pct_black`: The percent of the population that is non-Hispanic black.
 -   `unemployment`: The unemployment rate, which is the percent of the labor force that is unemployed.
 -   `pct_foreign_born`: The percent of the population that is foreign born.
 -   `pct_college`: The percent of the population over the age of 25 that has *at least* a Bachelor's degree.
 
-Once you are satisfied with these four variables, you should drop all of the other variables in your dataset except for `met2013` and `met_name`.
+You should be able to do all of this recoding with the `group_by` and `summarize` commands. Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data.
 
 ## Reshaping and Merging Data Assignment {#reshaping-and-merging-data-assignment}
 
@@ -217,24 +209,24 @@ For this assignment, we will combine all the pieces we have been working on so f
 
 ### Creating aggregate IPUMS data
 
-Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area. Ultimately, we want to create a metro area level dataset with the following four variables:
+Ultimately, we want to create a metro area level dataset with the following variables:
 
 -   `met2013`: the metro area id
 -   `seidiff`: the mean SEI of whites in each metro area minus the mean SEI of blacks in each metro area.
--   `black_n`: the number of black respondents in the sample for the given metro area.
--   `white_n`: the number of white respondents in the sample for the given metro area.
-
-In order to do this, you will need to use the `group_by` and `summarize` commands to aggregate to the metro area by race. Remember that `n()` in the summarize command will give you the number of cases in that grouping. Note that `summarize` cannot directly give you the SEI difference. It will instead give you the means by group which you can then use to calculate `seidiff`.
-
-### Merging with aggregated tract level data
-
-The second step is to merge the combined IPUMS data from the previous section with the metro-level data you aggregated from the tract data in the previous assignment. This will give you a combined dataset. You should call this combined dataset `met_area`.
-
-You should note that these Social Explorer and IPUMS datasets do not contain the same number of observations at the metropolitan level. The IPUMS data has far fewer metro areas because only very large metro areas were identified in the individual-level data. There are also a couple of cases where the IPUMS data does not have a corresponding metro area from the tract data due to some discrepancies in identification between the two data sources. Your final dataset should contain only metro areas that had valid observations in both datasets.
 
 Furthermore, some metro areas had very small samples of either white or black respondents. In these cases, there is likely to be a lot of statistical noise in our estimation of the SEI differences. To address this problem, I want you to remove all metro areas that had fewer than 50 black or white respondents. This is crude but fairly effective. We will learn a better way to handle this kind of issue next term (spoiler: multilevel models).
 
-## Programming Assignment {#programming-assignment}
+Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area using `group_by` and `summarize`. You can use the `mean()` and `n()` functions to get the mean SEI and sample size, respectively, for each racial group in each metro.
+
+The next step is to reshape this data, which is in long format, to a wide format so that you can calculate the sei difference between the mean of white and black respondents. Once you have calculated this value, you should restrict the dataset as described above and then remove all of the unneeded variables.
+
+### Merging with aggregated tract level data
+
+We now want to merge the aggregated ipums from the previous section with the metro-level data you aggregated from the tract data in the previous assignment. This will give you a combined dataset. You should call this combined dataset `met_area`.
+
+You should note that these Social Explorer and IPUMS datasets do not contain the same number of observations at the metropolitan level. The IPUMS data has far fewer metro areas because only very large metro areas were identified in the individual-level data. There are also a couple of cases where the IPUMS data does not have a corresponding metro area from the tract data due to some discrepancies in identification between the two data sources. Your final dataset should contain only metro areas that had valid observations in both datasets.
+
+## Programming Assignment
 
 For this assignment, you will calculate a measure of segregation called the Dissimilarity Index or *D* for short. The dissimilarity index measures the extent to which two groups are unevenly distributed across neighborhoods in a city. The dissimilarity index has a clean and intuitive interpretation : the percent of one of the two groups that would have to move neighborhoods in order to make the distribution of the two groups even across the entire city. One nice feature of the dissimilarity index is that it is indiﬀerent to the relative size of the groups in the city. Thus, the dissimilarity indices of two cities with very diﬀerent racial distributions (e.g. Portland and Detroit) can be directly compared.
 
@@ -246,33 +238,32 @@ Where $a_i$ is the number of group a members that live in census tract $i$ and $
 
 Here are the following logical steps that need to be performed to calculate the dissimilarity index:
 
-1.  Calculate the total number of $A$ and $B$ members in the city.
-2.  Divide the number of each group in a given neighborhood ($a_i$ and $b_i$) by the total. This basically gives you the distribution of each group across neighborhoods.
-3.  Subtract one of the distributions from (2) from the other and take the absolute value.
+1.  Calculate the distributions of each racial group across the city ($a_i/A$ and $b_i/B$). T
+3.  Subtract one of the distributions from (1) from the other and take the absolute value with the `abs` function.
 4.  Sum up the values from (3) and multiply by 50.
 
-For this assignment, I want you to calculate *D* for each metropolitan area. You will need to use the tract-level dataset to calculate this measure. You should write this code in the `organize_data.R` script under the "Calculate Dissimilarity Index" section. You must do the following:
+To calculate this measure for all cities in your tracts data, you must do the following:
 
-1.  Create a calculate_dissimilarity function that when given a dataset of tracts, will compute the dissimilarity index and return the results.
+1.  Create a `calculate_dissimilarity` function that when given a dataset of tracts, will compute the dissimilarity index and return the results.
 2.  A for-loop or `sapply` command that uses the function above to actually calculate dissimilarity for each metropolitan area.
-3.  Create a data.frame of dissimilarity indices from the results of (2). This dataset should have two variables:
-    1.  `met2013` to identify metropolitan areas
-    2.  `dissim_index` for the actual dissimilarity index in each metropolitan area.
+3.  Create a `tibble` of dissimilarity indices from the results of (2). This dataset should have two variables:
+    *  `met2013` to identify metropolitan areas
+    *  `dissim_index` for the actual dissimilarity index in each metropolitan area.
 4.  Merge this new data.frame with the combined `met_area` data.frame you constructed in the previous assignment.
 
-You should now have a final analytical dataset. it should be named `met_area`. You should save this as `met_area.RData` in the `output` directory. We are now done with the `organize_data.R` script.
+You should now have a final analytical dataset. it should be named `met_area`. You should save this as `met_area.RData` in the `output` directory with the `save` command. We are now done with the `organize_data.R` script.
 
-## R Markdown Assignment {#r-markdown-assignment}
+## Quarto Assignment
 
 In this assignment, we will finally answer the research question: How does the relative size of the black population and the level of black/white segregation in a city affect the difference in occupational status between whites and blacks?
 
-Ultimately, I want you to report your results in a short PDF report from an R Markdown file. I give you freedom in thinking about how to get there, but you will ultimately need some linear models that consider controls for the percent foreign born, percent college educated, and unemployment in a city. You will also want to give some thought to graphical displays of the univariate and bivariate distributions of key variables.
+Ultimately, I want you to report your results in a short PDF report from a Quarto file. I give you freedom in thinking about how to get there, but you will ultimately need some linear models that consider controls for the percent foreign born, percent college educated, and unemployment in a city. You will also want to give some thought to graphical displays of the univariate and bivariate distributions of key variables.
 
-You can use the `report.Rmd` file in the repository as a skeleton for your report. This document contains some stub information about sectioning of the report and what should go into each section of the report. It also gives you templates for R code chunks that can produce figures and regression model tables. You can do your initial analysis in the provided `analysis.R` script, create a separate `analysis.Rmd` file for the analysis, or just do the entire analysis in the `report.Rmd` document. I leave that choice up to you.
+You can use the `report.qmd` file in the repository as a skeleton for your report. This document contains some stub information about sectioning of the report and what should go into each section of the report. It also gives you templates for R code chunks that can produce figures and regression model tables. You can do your initial analysis in the provided `analysis.R` script, create a separate `analysis.qmd` file for the analysis, or just do the entire analysis in the `report.qmd` document. I leave that choice up to you.
 
-When your report is completed, be sure to commit the PDF file as well as the R Markdown file.
+When your report is completed, be sure to commit the PDF file to Canvas.
 
-## References {#references}
+## References
 
 Blalock, Hubert M. 1967. *Toward a Theory of Minority-Group Relations.* New York: John Wiley and Sons.
 
