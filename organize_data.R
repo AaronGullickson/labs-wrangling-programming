@@ -22,7 +22,15 @@ library(tidyverse)
 # drop cases that are missing on met2013 or SEI (i.e. have a zero value)
 
 
-# create combined race variable from the race and hispanic variables
+# create combined race variable from the race and hispan variables with the 
+# following names
+# - white
+# - black
+# - latino
+# - api (Asian and Pacific Islander)
+# - aian (American Indian and Alaska Native)
+# - multiple
+# - other
 
 
 # check yourself before you wreck yourself
@@ -48,18 +56,30 @@ tracts <- read_csv("input/nber/cbsa2fipsxw.csv",
          Geo_COUNTY=fipscountycode) |>
   right_join(tracts)
 
-# 1. subset the data to remove any tracts with a missing met2013 id.
-# 2. drop variables we don't need.
-# 3. provide better variable names for remaining variables
+# subset the data to remove any tracts with a missing met2013 id.
+# drop variables we don't need.
+# provide better variable names for remaining variables. The syntax 
+# for this variable name should be `pop_{denominator}_{numerator}` so 
+# that we know what variable the count is a part of.
+#  - pop_total
+#  - pop_total_white
+#  - pop_total_black
+#  - pop_over25
+#  - pop_over25_ba
+#  - pop_over25_ma
+#  - pop_over25_prof
+#  - pop_over25_phd
+#  - pop_labor
+#  - pop_labor_unemp
+#  - pop_total_foreign
 
 
-# aggregate tracts into metro area level data by summing
-
-
-# calculate the needed metro area summary statistics
-
-
-# keep only the required summary variables and drop all others
+# aggregate tracts into metro area level data with the required summary
+# statistics:
+# pct_black: percent of the total population that is black
+# pct_unemp: percent of the the labor force unemployed
+# pct_foreign: percent of the total population that is foreign-born
+# pct_college: percent of the over 25 population that has a college degree
 
 
 # Merge data -------------------------------------------------------------------
