@@ -1,4 +1,4 @@
-# This script will check for and install if neccesary and packages required for
+# This script will check for and install if necessary and packages required for
 # the project
 
 if(!require("tidyverse")) {
@@ -6,9 +6,9 @@ if(!require("tidyverse")) {
   library(tidyverse)
 }
 
-if(!require("rmarkdown")) {
-  install.packages("rmarkdown")
-  library(rmarkdown)
+if(!require("gt")) {
+  install.packages("gt")
+  library(gt)
 }
 
 if(!require("texreg")) {
@@ -18,17 +18,12 @@ if(!require("texreg")) {
   library(texreg)
 }
 
-if(!require("tinytex")) {
+if(!require(tinytex)) {
   install.packages("tinytex")
   library(tinytex)
 }
 
-#install tiny tex if not found
-#Mac Users will need to first run the following commands in Terminal
-# sudo chown -R `whoami`:admin /usr/local/bin
-# ~/Library/TinyTeX/bin/x86_64-darwin/tlmgr path add
-if(!tinytex:::is_tinytex()) {
-  install_tinytex(force=TRUE)
+if(!tinytex::is_tinytex()) {
+  system("quarto install tinytex")
 }
-
 
