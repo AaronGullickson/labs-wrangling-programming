@@ -6,7 +6,7 @@
 -   [Cleaning Data Assignment](#cleaning-data-assignment)
 -   [Combining and Merging Data Assignment](#reshaping-and-merging-data-assignment)
 -   [Programming Assignment](#programming-assignment)
--   [R Markdown Assignment](#r-markdown-assignment)
+-   [Quarto Assignment](#quarto-assignment)
 -   [References](#references)
 
 ## Introduction
@@ -203,7 +203,7 @@ We want to aggregate the tract data for each metro area to construct four variab
 
 You should be able to do all of this recoding with the `group_by` and `summarize` commands. Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data.
 
-## Reshaping and Merging Data Assignment {#reshaping-and-merging-data-assignment}
+## Reshaping and Merging Data Assignment
 
 For this assignment, we will combine all the pieces we have been working on so far to create a single metro area level dataset. All of the work should be done in the "Merge data" section of the `organize_data.R` script.
 
