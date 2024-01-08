@@ -35,6 +35,10 @@ library(tidyverse)
 
 # check yourself before you wreck yourself
 
+# create an aggregate dataset by metro area of white-black mean SEI differences 
+# and sample size of white and black respondents.
+
+
 # Tract Data -------------------------------------------------------------------
 
 # read in the social explorer tract data from CSV. Name your object "tracts"
@@ -83,17 +87,6 @@ tracts <- read_csv("input/nber/cbsa2fipsxw.csv",
 
 
 # Merge data -------------------------------------------------------------------
-
-# aggregate mean SEI for each metro area and calculate the difference in 
-# white-black mean SEI by metro area. 
-
-
-# count the number of black and white respondents by metro area.
-
-
-# merge the mean sei and the count of black and white respondents by metro area
-# into a single combined dataset for the aggregated IPUMS data.
-
 
 # merge the aggregated IPUMS data with the aggregated tract data to get full
 # metro area data. This dataset should be called "met_area"

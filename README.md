@@ -1,104 +1,45 @@
-**Table of Contents**
 
--   [Introduction](#introduction)
--   [Understanding Git](#understanding-git)
--   [Reading and Writing Data Assignment](#reading-and-writing-data-assignment)
--   [Cleaning Data Assignment](#cleaning-data-assignment)
--   [Combining and Merging Data Assignment](#reshaping-and-merging-data-assignment)
--   [Programming Assignment](#programming-assignment)
--   [Quarto Assignment](#quarto-assignment)
--   [References](#references)
+# Data Wrangling and Programming, Sociology 412/512
 
 ## Introduction
 
-The rest of the lab assignments for the term are going to work towards doing a full statistical analysis. We will use the same git repository for each component of this project and you will use the GitHub issues tab to open a new issue when you complete an assignment.
-
-### Background
-
-For this project, we are going to examine the empirical evidence for two theories about how the macro-level demographic context of a city might affect the level of racial inequality within that city.
-
-Blalock (1967) argued that as the relative size of a minority group increases, it represents a greater perceived threat to the economic and political hegemony of the majority group, and will lead to greater efforts by the majority group to control and limit minority groups in order to maintain power. On the other hand, Massey and Denton (1993) have argued that racial segregation is the "linchpin" of racial inequality in the US, because it concentrates disadvantage in minority neighborhoods and segregates the social networks that provide important access to resources. Neither of these theories are mutually exclusive. We will use recent Census data to examine the empirical evidence for each argument.
+This repository will be used to complete all of the lab assignments for data wrangling and programming associated with Practical Data Analysis in Sociology using R.  Unlike the prior assignments, all of these assignments will be focused on building up a single research project in which you download data and create an analytical dataset to answer an empirical research question.  
 
 ### Our Project
+
+For this project, we are going to examine the empirical evidence for two theories about how the macro-level demographic context of a city might affect the level of racial inequality within that city. Blalock (1967) argued that as the relative size of a minority group increases, it represents a greater perceived threat to the economic and political hegemony of the majority group, and will lead to greater efforts by the majority group to control and limit minority groups in order to maintain power. On the other hand, Massey and Denton (1993) have argued that racial segregation is the "linchpin" of racial inequality in the US, because it concentrates disadvantage in minority neighborhoods and segregates the social networks that provide important access to resources. Neither of these theories are mutually exclusive. We will use recent Census data to examine the empirical evidence for each argument.
 
 As a measure of racial inequality in a city, we are going to measure the difference in [Duncan's Socioeconomic Index](https://usa.ipums.org/usa-action/variables/SEI#description_section) (SEI) between whites and blacks in that city. SEI is a composite measure that assigns a score to a person's occupation based on a combination of the average income earned in that occupation and the average education of individuals who hold that occupation. It is the most well-known measure in a family of occupational scoring techniques common to stratification research, although there is [considerable debate](https://usa.ipums.org/usa/chapter4/sei_note.shtml) on their usefulness. The difference in SEI between whites and blacks gives us a measure of occupational inequality within a city.
 
 We are going to test out Blalock's theory by looking at the association between percent black in a city and the racial difference in SEI. To test Massey and Denton's theory, we will examine the association between a measure of residential segregation called the [Dissimilarity Index](http://www.censusscope.org/about_dissimilarity.html) and the racial difference in SEI.
 
-#### Data Sources
+### Data Sources
 
 We will use two primary data sources to construct our analytical dataset. first, we will use [Social Explorer](https://socialexplorer.com) to download census tract data for the entire US based on American Community Survey (ACS) data from 2014-2018. The ACS is an annual 1% survey of the American population conducted by the US Census Bureau that collects a variety of demographic information. The Social Explorer data is derived from published Census reports on aggregate statistics from the ACS. Ultimately, we want data at the level of metropolitan statistical areas (i.e. cities). However, we need data at the tract level within cities in order to calculate the dissimilarity index of segregation. Therefore we will just download tract data and ultimately aggregate this up to the level of metropolitan areas.
 
 Unfortunately, the Census bureau does not publish aggregate data that will give us the mean difference in SEI between whites and blacks in a metropolitan area. In order to get this number, we will need to download the individual-level ACS data from 2016 and calculate the difference ourselves. We will be downloading the ACS extract from the [Integrated Public Use Microdata Series](https://usa.ipums.org/usa/) (IPUMS) at the Minnesota Population Center. Unfortunately, for reasons of confidentiality, the metropolitan area of respondents is only available in larger metropolitan areas, so our analysis will be limited to the largest 150-200 cities in the US.
 
-#### Overall Plan
+### Overall Plan
 
-We will develop this project over multiple exercises. Here is an overview of the individual assignments that we will complete for the project:
+We will develop this project over multiple exercises. Here is an overview of the individual steps that we will complete for the project:
 
-1.  Learn how to use git and GitHub to collaborate and get help.
-2.  Create the necessary data extracts from Social Explorer and IPUMS and read this data into R.
-3.  Clean, recode, and aggregate the data up to the metro-level area.
-4.  Merge the dataset from Social Explorer with the dataset from IPUMS.
-5.  Calculate the dissimilarity index for each metro area and merge this into the data from (4). We now have a final analytical dataset.
-6.  Conduct the analysis on the analytical dataset, and write up a report of your analysis in Quarto with tables and figures.
+1.  Create the necessary data extracts from Social Explorer and IPUMS and read this data into R.
+2.  Clean, recode, and aggregate the data up to the metro-level area.
+3.  Merge the dataset from Social Explorer with the dataset from IPUMS.
+4.  Calculate the dissimilarity index for each metro area and merge this into the data from (4). We now have a final analytical dataset.
+5.  Conduct the analysis on the analytical dataset, and write up a report of your analysis in Quarto with tables and figures.
 
 Further instructions for each of these assignments are provided below.
 
-#### Using the Issues Tab for Assignment Completion
+### Loading Libraries
 
-As you complete each assignment, you will indicate that you have completed it by opening a new issue on your GitHub repository. Go to the "Issues" tab and select the "New Issue" button in the upper right. Title the issue with the name of the assignment and in the initial message indicate that you are done and use @AaronGullickson to alert me.
+For all users, in order to ensure all required packages are installed on your system, just source in the `check_packages.R` script included in this repository.
 
-I will evaluate assignment using a GitHub feature called a **pull request**. This feature will allow you to review changes I make to your code and my comments about those changes before merging the changes into your project. To merge a pull request, follow these steps:
+### Completing the Assignments
 
-1.  Ensure the repository on GitHub is up-to-date with your local repository. You can check this in RStudio by making sure you don't have any uncommitted changes showing up in your git tab and that the git tab is not showing that your repository is ahead of the remote repository. If it is then commit all changes (if necessary) and push your commits.
-2.  Use the "Merge Pull Request" at the bottom of the GitHub pull request on your browser to merge the pull request. If this button is red, then do not merge the pull request. This indicates that the code in the pull request conflicts with changes you have made. If this is the case, then alert me by mentioning @AaronGullickson in a comment on the pull request.
-3.  One the pull request has been merged, you need to pull down the changes to your local repository using the git tab in RStudio.
+When you have completed each assignment, please open an issue in your GitHub repository to let me know it is ready for review. Be sure to summon me with @AaronGullickson in the text of the issue.
 
-#### Code Syntax
-
-One important aspect of writing good code is maintaining a consistent style in how you write this code. This can include things like how long a single line can be, how you label variable names, how you use comments, where you put spaces, etc. In order to start working toward style consistency, I would like you to follow these rules in your coding syntax for this assignment:
-
-1.  **Length of a line of code**. A single line of code should only be about 80 characters long. You can use the length of the sectioning comments as a rough guideline. To ensure that you stay roughly within that limit, you can turn on the "show margin" option in the RStudio preferences under Code \> Display. If your code is longer than this, be sure to use multiple lines with proper indentation. The "control+i" keystroke will fix indentation for you on multi-line commands.
-2.  **Variable names**. All variables should have lower case names and should not include spaces or special characters. Use the underscore (\_) to simulate spacing. Do not start variable names with a number. Variable names should be no longer than 20 characters. Be consistent in naming practices.
-3.  **Category names**. The names of categories in factor variables should be no longer than 20 characters.
-4.  **Spacing**. Always put a single space between assignment operators (e.g. `<-`) and after commas.
-
-#### Required Libraries
-
-We will work with a few additional libraries for this project. In addition, I want all students to be able to knit their Quarto document to a PDF which will require the installation of `tinytex` on your system. The libraries we will use are:
-
-
-
-1.  `tidyverse` - The tidyverse package actually contains eight separate packages that we will use. Most importantly it contains the `readr` package for reading in text-based data and `ggplot2` for plotting. It also contains other functions that will assist with data cleaning and wrangling.
-2.  `texreg` - A package for output the results of statistical models in a nice format.
-3. `gt` - A package for making nice tables.
-
-For all users, in order to install these packages on your system, just source in the `check_packages.R` script included in this repository.
-
-## Understanding Git
-
-The purpose of this first assignment is just to familiarize yourself with the git approach to version control and to get your local repository set up for future assignments. You should follow these steps.
-
-1.  Clone the repository to your local machine through RStudio by creating an R project.
-2.  Commit the \*.Rproj file that you just made with the commit message "Create R project"
-3.  Change "Your Name Here" to your name in the following documents:
-    -   read_raw_data.R
-    -   organize_data.R
-    -   analysis.R
-    -   report.qmd
-4.  Commit the name changes you just made with the commit message "Change researcher name"
-5.  Open and source the "check_packages.R" script. This will install required libraries and a tex package. It may take a little time the first time you run it.
-6.  Go to your repository on the GitHub classroom page. Confirm that the commits you made are showing here. If so, use the Issues tab in your repository to start a new issue entitled "Using Git Lab Assignment Ready" and mention me with @AaronGullickson in the body of the message.
-
-### Cloning the Repository
-
-In order to clone the repository, you will first need to copy the https address from the "Clone or Download" button in the upper right of the GitHub repository. **Do not download as a ZIP file or open in Git Desktop.**
-
-Once you have done this, the easiest way to clone the repository is by setting up a new project in RStudio. From within RStudio, go to File \> New Project.... Then choose the "Version Control" option followed by the "Git" option. Then paste in the https address from above for the repository URL and hit "Create Project." This will clone the git repository and set up a git tab in the upper right that will allow you to track changes, and commit and push those changes.
-
-Alternatively, you could have used the command line to clone the repository but this would not set up a project in RStudio which gives you the git functionality within RStudio.
-
-## Reading and Writing Data Assignment
+## Reading Data Assignment
 
 For this assignment, you will need to create a data extract from the Social Explorer dataset and the IPUMS website and then write R code that will read these data extracts into R.
 
@@ -174,13 +115,9 @@ One annoying thing about the Social Explorer data is the non-intuitive nature of
 -   total number of persons unemployed
 -   total number of persons foreign-born
 
-## Cleaning Data Assignment
+## Recoding Variables Assignment
 
-For this assignment, you will take the two datasets produced in the last assignment and code some new variables. For the tract data you will also need to aggregate to the metro-level before coding variables. For this assignment you will complete the two sections under the "Organize IPUMS data" and "Organize tract data" headings in the `organize_data.R` script.
-
-### IPUMS Data
-
-You should use the `race` and `hispan` variables to code a new factor variable called `racecombo`. This variable should have the following categories:
+For this assignment, you will code a new variable in the IPUMS dataset. You should use the `race` and `hispan` variables to code a new factor variable called `racecombo`. This variable should have the following categories:
 
 -   Non-Hispanic White
 -   Non-Hispanic Black
@@ -191,6 +128,23 @@ You should use the `race` and `hispan` variables to code a new factor variable c
 -   Hispanic
 
 After creating this variable, you should run some diagnostic checks to make sure that all the observations are in the categories that you expected.
+
+## Reshaping and Merging Data Assignment
+
+For this assignment, we will combine all the pieces we have been working on so far to create a single metro area level dataset.
+
+### IPUMS Data
+
+Ultimately, we want to create a metro area level dataset with the following variables:
+
+-   `met2013`: the metro area id
+-   `seidiff`: the mean SEI of whites in each metro area minus the mean SEI of blacks in each metro area.
+
+Furthermore, some metro areas had very small samples of either white or black respondents. In these cases, there is likely to be a lot of statistical noise in our estimation of the SEI differences. To address this problem, I want you to remove all metro areas that had fewer than 50 black or white respondents. This is crude but fairly effective. We will learn a better way to handle this kind of issue next term (spoiler: multilevel models).
+
+Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area using `group_by` and `summarize`. If you group by metro area and race at the same time, you will be able to use the  `mean()` and `n()` functions within the summarize to get the mean SEI and sample size, respectively, for each racial group in each metro.
+
+The next step is to reshape this aggregated data, which is in long format, to a wide format so that you can calculate the SEI difference between the mean of white and black respondents. Once you have calculated this value, you should restrict the dataset as described above and then remove all of the unneeded variables.
 
 ### Tract Data
 
@@ -203,26 +157,9 @@ We want to aggregate the tract data for each metro area to construct four variab
 
 You should be able to do all of this recoding with the `group_by` and `summarize` commands. Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data.
 
-## Reshaping and Merging Data Assignment
+### Merge the Data Sources
 
-For this assignment, we will combine all the pieces we have been working on so far to create a single metro area level dataset. All of the work should be done in the "Merge data" section of the `organize_data.R` script.
-
-### Creating aggregate IPUMS data
-
-Ultimately, we want to create a metro area level dataset with the following variables:
-
--   `met2013`: the metro area id
--   `seidiff`: the mean SEI of whites in each metro area minus the mean SEI of blacks in each metro area.
-
-Furthermore, some metro areas had very small samples of either white or black respondents. In these cases, there is likely to be a lot of statistical noise in our estimation of the SEI differences. To address this problem, I want you to remove all metro areas that had fewer than 50 black or white respondents. This is crude but fairly effective. We will learn a better way to handle this kind of issue next term (spoiler: multilevel models).
-
-Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area using `group_by` and `summarize`. You can use the `mean()` and `n()` functions to get the mean SEI and sample size, respectively, for each racial group in each metro.
-
-The next step is to reshape this data, which is in long format, to a wide format so that you can calculate the sei difference between the mean of white and black respondents. Once you have calculated this value, you should restrict the dataset as described above and then remove all of the unneeded variables.
-
-### Merging with aggregated tract level data
-
-We now want to merge the aggregated ipums from the previous section with the metro-level data you aggregated from the tract data in the previous assignment. This will give you a combined dataset. You should call this combined dataset `met_area`.
+We now want to merge the two metro-level datasets created in the prior two steps together to create a combined dataset. You should call this combined dataset `met_area`.
 
 You should note that these Social Explorer and IPUMS datasets do not contain the same number of observations at the metropolitan level. The IPUMS data has far fewer metro areas because only very large metro areas were identified in the individual-level data. There are also a couple of cases where the IPUMS data does not have a corresponding metro area from the tract data due to some discrepancies in identification between the two data sources. Your final dataset should contain only metro areas that had valid observations in both datasets.
 
@@ -253,13 +190,13 @@ To calculate this measure for all cities in your tracts data, you must do the fo
 
 You should now have a final analytical dataset. it should be named `met_area`. You should save this as `met_area.RData` in the `output` directory with the `save` command. We are now done with the `organize_data.R` script.
 
-## Quarto Assignment
+## Final Project
 
 In this assignment, we will finally answer the research question: How does the relative size of the black population and the level of black/white segregation in a city affect the difference in occupational status between whites and blacks?
 
 Ultimately, I want you to report your results in a short PDF report from a Quarto file. I give you freedom in thinking about how to get there, but you will ultimately need some linear models that consider controls for the percent foreign born, percent college educated, and unemployment in a city. You will also want to give some thought to graphical displays of the univariate and bivariate distributions of key variables.
 
-You can use the `report.qmd` file in the repository as a skeleton for your report. This document contains some stub information about sectioning of the report and what should go into each section of the report. It also gives you templates for R code chunks that can produce figures and regression model tables. You can do your initial analysis in the provided `analysis.R` script, create a separate `analysis.qmd` file for the analysis, or just do the entire analysis in the `report.qmd` document. I leave that choice up to you.
+You can use the `report.qmd` file in the repository as a skeleton for your report. This document contains some stub information about sectioning of the report and what should go into each section of the report.
 
 When your report is completed, be sure to commit the PDF file to Canvas.
 
