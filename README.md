@@ -1,3 +1,6 @@
+---
+editor: visual
+---
 
 # Data Wrangling and Programming, Sociology 412/512
 
