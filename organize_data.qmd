@@ -1,12 +1,21 @@
 ---
 title: "Organize Data"
-format: html
+format: 
+  html: 
+    code-fold: true
+    self-contained: true
+    toc: true
+execute: 
+  echo: true
+  warning: true
+  message: false
 ---
 
 This quarto document will be used to organize the data for the analysis. 
 
 ```{r}
 #| label: load-libraries
+#| include: false
 
 # load any needed libraries through the check packages script
 source("check_packages.R")
@@ -42,12 +51,12 @@ source("check_packages.R")
 ```
 
 
-After loading the tract data, we can merge in a crosswalk file that gives us the met2013 (metropolitan area) code and metro name for each tract. 
+After loading the tract data, we can merge in a crosswalk file that gives us the `met2013` (metropolitan area) code and metro name for each tract. 
 
 ```{r}
 #| label: merge-tract-crosswalk
 
-tracts <- read_csv("input/nber/cbsa2fipsxw.csv",
+tracts <- read_csv("data/data_raw/nber/cbsa2fipsxw.csv",
                  col_types = cols(fipsstatecode = "i", fipscountycode = "i")) |>
   filter(metropolitanmicropolitanstatis=="Metropolitan Statistical Area") |>
   select(cbsacode, cbsatitle, fipsstatecode, fipscountycode) |>
