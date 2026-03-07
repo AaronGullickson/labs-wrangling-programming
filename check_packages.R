@@ -11,16 +11,9 @@ if(!require("gt")) {
   library(gt)
 }
 
-if(!require("texreg")) {
-  install.packages("devtools")
-  library(devtools)
-  install_github("leifeld/texreg")
-  library(texreg)
-}
-
-if(!require(tinytex)) {
-  install.packages("tinytex")
-  library(tinytex)
+if(!require("modelsummary")) {
+  install.packages("modelsummary")
+  library(modelsummary)
 }
 
 if(!tinytex::is_tinytex()) {
