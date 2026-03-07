@@ -65,7 +65,7 @@ To access Social Explorer, you will need to be either on the campus network, ope
     -   A17005. Unemployment Rate for Civilian Population in Labor Force 16 years and over.
     -   A06001. Nativity by Citizenship status.
 6.  Look over the tables and make sure they look correct, and then click the CSV download icon on the right. Choose output options "Output column labels in the first row" and then download the CSV file *and* the data dictionary for reference.
-7.  Place the downloaded files in the `data/data_raw` directory of your project.
+7.  Place the downloaded files in the `data/data_raw/se` directory of your project (you will have to create the se subdirectory).
 
 ### Download IPUMS Data
 
@@ -79,58 +79,72 @@ Here are the steps you should follow to define your own extract:
     -   In Person \> Race, Ethnicity, and Nativity \> RACE and HISPAN
     -   In Person \> Occupational Standing \> SEI
 5.  Once you have all the variables that you need, select "View Cart" in upper right. Review your selections and then hit "Create Data Extract." On the next screen, you can write a description of your extract, and then hit "Submit Extract."
-6.  You will now be sent to a screen with all of your previous and pending extracts. You can also get to this page from the main page by hitting the "[Download or Revise Extract](https://usa.ipums.org/usa-action/extract_requests/download)" link. Your fixed-width data will not be immediately available. However, you will have access to some documentation, including some scripts in other software programs for reading in the data. You should save the basic codebook (its a plain text file) into your `input` directory of your project. This codebook will provide important information on the structure and coding of the data.
-7.  You will get an email when you data extract is ready. You can then go to the download page and download it. The data will download with the extension .gz. This is a g-zipped file. **Please leave it zipped**. R can read in zipped files and unzipped it will be too large for GitHub. Put this file in your `input` directory.
+6.  You will now be sent to a screen with all of your previous and pending extracts. You can also get to this page from the main page by hitting the "[Download or Revise Extract](https://usa.ipums.org/usa-action/extract_requests/download)" link. Your fixed-width data will not be immediately available. However, you will have access to some documentation, including some scripts in other software programs for reading in the data. You should save the basic codebook (its a plain text file) into your `data/data_raw/ipums` directory of your project (you will need to create the `ipums` subdirectory. This codebook will provide important information on the structure and coding of the data. To save it, click on the "basic" version of the codebook in your browser and then got to File \> Save and save it with a `.txt` suffix.
+7.  You will get an email when you data extract is ready. You can then go to the download page and download it. The data will download with the extension .gz. This is a g-zipped file. **Please leave it zipped**. R can read in zipped files and when unzipped it will be too large for GitHub. Safari likes to unzip files when it downloads them by default, so either use a different browser or adjust your preferences in Safari. Put this file in your `data/data_raw/ipums` directory.
 
 One nice feature of the IPUMS site, is that you can revise extracts on the download page. If you screw something up on your first try (probable), rather than starting from scratch, you can choose to revise an extract and just remove or add the variables and or samples you forgot.
 
 ### Read in the Raw Data
 
-You will need to write code in the `organize_data.R` script that reads in the fixed-width datasets you just downloaded. There is a section each for the IPUMS and tract data. You will also need to do some post-read dataset clean up.
+You will need to write code in the `organize_data.qmd` quarto document that reads in the datasets you just downloaded. In both cases, I expect you to include some narrative text describing this process outside of the respective code chunks.
 
 #### Reading in the IPUMS Data
 
+Use the `read-ipums-data` code chunk to read in the ACS data from IPUMS and name the resulting dataset `acs`.
+
 The IPUMS data is in fixed-width format. The codebook should provide you with the information you need to determine the widths necessary to read in the data. We will use the `read_fwf` function in the `readr` library rather than the `read.fwf` function in base R, because `read_fwf` is much faster and allows us to directly read a g-zipped file.
 
-Note that all of the IPUMS variables are coded as numeric values. You need to use the codebook to see which categories these numbers correspond to in cases of categorical variables. There is no need to recode them as factors for this assignment as we will create our own categorical variables in the next assignment.
+You want to read in the following variables from the IPUMS data:
 
-Be sure that all of your variables have good variable names following the syntax rules [outlined above](#code-syntax). Furthermore, to tidy up our dataset, I would like you to subset it so that only cases with a valid `met2013` and `sei` value (i.e. non-zero value) are kept.
+-   MET2013
+-   RACE
+-   HISPAN
+-   SEI
 
 #### Reading in the Tract Data
 
-The tract data is in CSV format so it should be easier to load into R. Keep in mind that if you did as instructed above and added labels in the first row of the CSV, you will need to skip a row when you read in the CSV.
+Use the `read-se-data` code chunk to read in the Social Explorer tract-level data and name it `tracts`. The tract data is in CSV format so it should be easier to load into R. Keep in mind that if you did as instructed above and added labels in the first row of the CSV, you will need to skip a row when you read in the CSV.
 
-After you have read in the tract data, I would like you to run the code that is already present in the script to assign metropolitan area ids to each tract. These will not be provided in the data from Social Explorer, but can be determined by cross-referencing state and county ids with metropolitan statistical area ids, which is what this code does (the file we are using to do it is called a "crosswalk" file). You should then remove any tracts with a missing value on met2013 id, because these tracts do not belong to metropolitan statistical areas.
+Also you should check that you can run the provided code in the `merge-tract-crosswalk` chunk which will merge in crosswalk data that identifies the metro area of each tract with a `met2013` and `met_name` variable.
 
-One annoying thing about the Social Explorer data is the non-intuitive nature of the variable names. There are also a lot of variables that we do not need. I would like you to keep only the following variables and to rename them to something more intuitive. You can look in your codebook and use the data viewer in RStudio to deduce where these variables are.
+## Cleaning and Recoding Assignment
 
--   The metropolitan id already named `met2013`. Please keep this name as we will use it to merge datasets later.
--   The metropolitan name named `met_name`. Keep this name.
--   total population in the tract.
--   total population of non-Hispanic whites.
--   total population of non-Hispanic blacks.
--   total population over the age of 25. This is used as the denominator for the educational categories that follow.
--   total population over the age of 25 with bachelor's degree.
--   total population over the age of 25 with master's degree.
--   total population over the age of 25 with professional degree.
--   total population over the age of 25 with doctoral degree.
--   total labor force population
--   total number of persons unemployed
--   total number of persons foreign-born
+Now that we have each variable loaded into R, we want to do some clean up and recode variables as needed.
 
-## Recoding Variables Assignment
+### Clean up of IPUMS data
 
-For this assignment, you will code a new variable in the IPUMS dataset. You should use the `race` and `hispan` variables to code a new factor variable called `racecombo`. This variable should have the following categories:
+For the IPUMS data, you should do the following within the `filter-recode-ipums-data` code chunk:
 
--   Non-Hispanic White
--   Non-Hispanic Black
--   non-Hispanic Asian or Pacific Islander
--   non-Hispanic American Indian or Alaska Native
--   non-Hispanic Other
--   non-Hispanic Multiple race
--   Hispanic
+1.  We know that individuals with a zero value for MET2013 do not live in identifiable metropolitan areas and individuals with a zero SEI are not in the workforce. Neither of these cases can contribute to our analysis so lets `filter` them out.
+2.  We want to code the RACE and HISPAN variables into a single combined race variable, with the following categories:
+    -   `white`: non-Hispanic and White responses
+    -   `black`: non-Hispanic and Black responses
+    -   `api`: non-Hispanic Asian and Pacific Islander responses
+    -   `aian`: non-Hispanic American Indian/Alaska Native responses
+    -   `hispanic`: Any Hispanic response (regardless of race)
+    -   `other`: non-Hispanic and Other race responses
+    -   `multiple`: non-Hispanic and multiple race responses
 
-After creating this variable, you should run some diagnostic checks to make sure that all the observations are in the categories that you expected.
+After creating the combined race variable, you should run diagnostic checks to make sure that all the observations are in the categories that you expected.
+
+### Clean up of SE tract data
+
+For the tract data, you should use the `rename-filter-se-data` code chunk to perform the following operations:
+
+1.  After merging in the crosswalk file, any case with a missing value (NA) on the `met2013` variable is a tract that is not within a metropolitan statistical area and you should use `filter` to remove these cases.
+2.  The Social Explorer data has very non-intuitively named variables. You should `rename` the following variables to something more intuitive using good naming practices:
+    -   total population in the tract.
+    -   total population of non-Hispanic whites.
+    -   total population of non-Hispanic blacks.
+    -   total population over the age of 25. This is used as the denominator for the educational categories that follow.
+    -   total population over the age of 25 with bachelor's degree.
+    -   total population over the age of 25 with master's degree.
+    -   total population over the age of 25 with professional degree.
+    -   total population over the age of 25 with doctoral degree.
+    -   total labor force population
+    -   total number of persons unemployed
+    -   total number of persons foreign-born
+3.  Use `select` to keep only the `met2013`, `met_name`, and variables you just renamed in step 2.
 
 ## Reshaping and Merging Data Assignment
 
@@ -138,33 +152,33 @@ For this assignment, we will combine all the pieces we have been working on so f
 
 ### IPUMS Data
 
-Ultimately, we want to create a metro area level dataset with the following variables:
+Use the `aggregate-ipums-data` code chunk to create a metro area level dataset from the IPUMS data with the following variables:
 
 -   `met2013`: the metro area id
 -   `seidiff`: the mean SEI of whites in each metro area minus the mean SEI of blacks in each metro area.
 
-Furthermore, some metro areas had very small samples of either white or black respondents. In these cases, there is likely to be a lot of statistical noise in our estimation of the SEI differences. To address this problem, I want you to remove all metro areas that had fewer than 50 black or white respondents. This is crude but fairly effective. We will learn a better way to handle this kind of issue next term (spoiler: multilevel models).
+The key to doing this will be to use `group_by` and `summarize` to get an aggregate dataset at the metro *and* race level and then `reshape` that dataset wider to get racial groups on the same row. Be sure to also use `n()` to get sample sizes as we will use that in the next step.
 
-Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area using `group_by` and `summarize`. If you group by metro area and race at the same time, you will be able to use the `mean()` and `n()` functions within the summarize to get the mean SEI and sample size, respectively, for each racial group in each metro.
+Some metro areas had very small samples of either white or black respondents. In these cases, there is likely to be a lot of statistical noise in our estimation of the SEI differences. To address this problem, I want you to you to:
 
-The next step is to reshape this aggregated data, which is in long format, to a wide format so that you can calculate the SEI difference between the mean of white and black respondents. Once you have calculated this value, you should restrict the dataset as described above and then remove all of the unneeded variables.
+-   `filter` out all metro areas that had fewer than 50 black or white respondents. This is a somewhat crude but but fairly effective approach.
 
 ### Tract Data
 
-We want to aggregate the tract data for each metro area to construct four variables.
+In the `aggregate-se-data` code chunk, use `group_by` and `summarize` to get a dataset at the metro area level with the following variables.
 
 -   `pct_black`: The percent of the population that is non-Hispanic black.
--   `unemployment`: The unemployment rate, which is the percent of the labor force that is unemployed.
+-   `pct_unemployed`: The unemployment rate, which is the percent of the labor force that is unemployed.
 -   `pct_foreign_born`: The percent of the population that is foreign born.
 -   `pct_college`: The percent of the population over the age of 25 that has *at least* a Bachelor's degree.
 
-You should be able to do all of this recoding with the `group_by` and `summarize` commands. Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data.
+Note that if you aggregate across both `met2013` and `met_name`, you will get both metro-area numeric ids and names in your aggregated data, which is useful.
 
 ### Merge the Data Sources
 
 We now want to merge the two metro-level datasets created in the prior two steps together to create a combined dataset. You should call this combined dataset `met_area`.
 
-You should note that these Social Explorer and IPUMS datasets do not contain the same number of observations at the metropolitan level. The IPUMS data has far fewer metro areas because only very large metro areas were identified in the individual-level data. There are also a couple of cases where the IPUMS data does not have a corresponding metro area from the tract data due to some discrepancies in identification between the two data sources. Your final dataset should contain only metro areas that had valid observations in both datasets.
+You should note that these Social Explorer and IPUMS datasets do not contain the same number of observations at the metropolitan level. The IPUMS data has far fewer metro areas because larger metro areas were identified in the individual-level data. There are also a couple of cases where the IPUMS data does not have a corresponding metro area from the tract data due to some discrepancies in identification between the two data sources. Your final dataset should contain only metro areas that had valid observations in both datasets.
 
 ## Programming Assignment
 
@@ -184,14 +198,11 @@ Here are the following logical steps that need to be performed to calculate the 
 
 To calculate this measure for all cities in your tracts data, you must do the following:
 
-1.  Create a `calculate_dissimilarity` function that when given a dataset of tracts, will compute the dissimilarity index and return the results.
-2.  A for-loop or `sapply` command that uses the function above to actually calculate dissimilarity for each metropolitan area.
-3.  Create a `tibble` of dissimilarity indices from the results of (2). This dataset should have two variables:
-    -   `met2013` to identify metropolitan areas
-    -   `dissim_index` for the actual dissimilarity index in each metropolitan area.
-4.  Merge this new data.frame with the combined `met_area` data.frame you constructed in the previous assignment.
+1.  Use the `create-dissimilarity-function` code chunk to create a `calculate_dissimilarity` function that when given a dataset of tracts, will compute the dissimilarity index and return the results.
+2.  Use the `calculate-dissimilarity` code chunk to iterate over all metro areas with a for-loop or `map` and calculate the dissimilarity index. You should create a dataset that has the `met2013` id and a `dissim_index` variable.
+3.  Use the `merge-dissimilarity` code chunk to merge the dataset from (2) with the combined `met_area` dataset you constructed in the previous assignment.
 
-You should now have a final analytical dataset. it should be named `met_area`. You should save this as `met_area.RData` in the `output` directory with the `save` command. We are now done with the `organize_data.R` script.
+You should now have a final analytical dataset. It should be named `met_area`. Use the `save-analytical-data` code chunk to save this dataset as `met_area.RData` in the `data/data_constructed` directory using the `save` command. We are now done with the `organize_data.R` script.
 
 ## Final Project
 
@@ -199,7 +210,7 @@ In this assignment, we will finally answer the research question: How does the r
 
 Ultimately, I want you to report your results in a short PDF report from a Quarto file. I give you freedom in thinking about how to get there, but you will ultimately need some linear models that consider controls for the percent foreign born, percent college educated, and unemployment in a city. You will also want to give some thought to graphical displays of the univariate and bivariate distributions of key variables.
 
-You can use the `report.qmd` file in the repository as a skeleton for your report. This document contains some stub information about sectioning of the report and what should go into each section of the report.
+You can use the `report.qmd` file in the repository as a skeleton for your report. This document contains some stub information about sectioning of the report and what should go into each section of the report. Example code for figures and model tables is also provided which can be re-purposed as needed.
 
 When your report is completed, be sure to commit the PDF file to Canvas.
 
