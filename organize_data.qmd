@@ -1,0 +1,108 @@
+---
+title: "Organize Data"
+format: html
+---
+
+This quarto document will be used to organize the data for the analysis. 
+
+```{r}
+#| label: load-libraries
+
+# load any needed libraries through the check packages script
+source("check_packages.R")
+```
+
+# Organize IPUMS Individual data
+
+```{r}
+#| label: read-ipums-data
+
+
+```
+
+
+```{r}
+#| label: filter-recode-ipums-data
+
+
+# be sure to include checks!
+```
+
+
+```{r}
+#| label: aggregate-ipums-data
+
+```
+
+# Organize Social Explorer tract data
+
+```{r}
+#| label: read-se-data
+
+```
+
+
+After loading the tract data, we can merge in a crosswalk file that gives us the met2013 (metropolitan area) code and metro name for each tract. 
+
+```{r}
+#| label: merge-tract-crosswalk
+
+tracts <- read_csv("input/nber/cbsa2fipsxw.csv",
+                 col_types = cols(fipsstatecode = "i", fipscountycode = "i")) |>
+  filter(metropolitanmicropolitanstatis=="Metropolitan Statistical Area") |>
+  select(cbsacode, cbsatitle, fipsstatecode, fipscountycode) |>
+  rename(met2013=cbsacode, met_name=cbsatitle, Geo_STATE=fipsstatecode,
+         Geo_COUNTY=fipscountycode) |>
+  right_join(tracts)
+```
+
+
+```{r}
+#| label: rename-filter-se-data
+
+
+```
+
+
+```{r}
+#| label: aggregate-se-data
+
+```
+
+
+# Merge data sources
+
+```{r}
+#| label: merge-data
+
+```
+
+
+# Calculate dissimilarity
+
+```{r}
+#| label: create-dissimilarity-function
+
+```
+
+
+```{r}
+#| label: calculate-dissimilarity
+
+```
+
+
+```{r}
+#| label: merge-dissimilarity
+
+
+```
+
+
+# Save analytical data
+
+
+```{r}
+#| label: save-analytical-data
+
+```
