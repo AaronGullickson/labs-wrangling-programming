@@ -6,7 +6,7 @@ editor: visual
 
 ## Introduction
 
-This repository will be used to complete all of the lab assignments for data wrangling and programming associated with Practical Data Analysis in Sociology using R.  Unlike the prior assignments, all of these assignments will be focused on building up a single research project in which you download data and create an analytical dataset to answer an empirical research question.  
+This repository will be used to complete all of the lab assignments for data wrangling and programming associated with Practical Data Analysis in Sociology using R. Unlike the prior assignments, all of these assignments will be focused on building up a single research project in which you download data and create an analytical dataset to answer an empirical research question.
 
 ### Our Project
 
@@ -20,19 +20,24 @@ We are going to test out Blalock's theory by looking at the association between 
 
 We will use two primary data sources to construct our analytical dataset. first, we will use [Social Explorer](https://socialexplorer.com) to download census tract data for the entire US based on American Community Survey (ACS) data from 2014-2018. The ACS is an annual 1% survey of the American population conducted by the US Census Bureau that collects a variety of demographic information. The Social Explorer data is derived from published Census reports on aggregate statistics from the ACS. Ultimately, we want data at the level of metropolitan statistical areas (i.e. cities). However, we need data at the tract level within cities in order to calculate the dissimilarity index of segregation. Therefore we will just download tract data and ultimately aggregate this up to the level of metropolitan areas.
 
-Unfortunately, the Census bureau does not publish aggregate data that will give us the mean difference in SEI between whites and blacks in a metropolitan area. In order to get this number, we will need to download the individual-level ACS data from 2016 and calculate the difference ourselves. We will be downloading the ACS extract from the [Integrated Public Use Microdata Series](https://usa.ipums.org/usa/) (IPUMS) at the Minnesota Population Center. Unfortunately, for reasons of confidentiality, the metropolitan area of respondents is only available in larger metropolitan areas, so our analysis will be limited to the largest 150-200 cities in the US.
+Unfortunately, the Census bureau does not publish aggregate data that will give us the mean difference in SEI between whites and blacks in a metropolitan area. In order to get this number, we will need to download the individual-level ACS data from 2016 and calculate the difference ourselves. We will be downloading the ACS extract from the [Integrated Public Use Microdata Series](https://usa.ipums.org/usa/) (IPUMS) at the Minnesota Population Center. Unfortunately, for reasons of confidentiality, the metropolitan area of respondents is not directly reported by the census. However, IPUMS is able to derive it based on the [Public Use Microdata Area](https://www.census.gov/programs-surveys/geography/guidance/geo-areas/pumas.html) (PUMA) for about 150-200 cities in the US, which will form the basis for our analysis.
 
 ### Overall Plan
 
 We will develop this project over multiple exercises. Here is an overview of the individual steps that we will complete for the project:
 
 1.  Create the necessary data extracts from Social Explorer and IPUMS and read this data into R.
-2.  Clean, recode, and aggregate the data up to the metro-level area.
-3.  Merge the dataset from Social Explorer with the dataset from IPUMS.
-4.  Calculate the dissimilarity index for each metro area and merge this into the data from (4). We now have a final analytical dataset.
-5.  Conduct the analysis on the analytical dataset, and write up a report of your analysis in Quarto with tables and figures.
+2.  Clean and recode each dataset where needed.
+3.  For both datasets, aggregate the data up to the metro-level area.
+4.  Merge the dataset from Social Explorer with the dataset from IPUMS.
+5.  Calculate the dissimilarity index for each metro area and merge this into the data from (4). We now have a final analytical dataset.
+6.  Conduct the analysis on the analytical dataset, and write up a report of your analysis in Quarto with tables and figures.
 
 Further instructions for each of these assignments are provided below.
+
+### Using Quarto
+
+All assignments will be completed in quarto documents. I am expecting that in addition to writing R code, students will write accompanying narrative text of what they are doing or what they found out within each section. This narrative text does not need to be extensive but it should be present.
 
 ### Loading Libraries
 
@@ -48,24 +53,19 @@ For this assignment, you will need to create a data extract from the Social Expl
 
 ### Download Social Explorer Data
 
-To access Social Explorer, you will need to be either on the campus network or operating through the [campus VPN](https://library.uoregon.edu/library-technology-services/proxy). From the [Social Explorer main page](https://www.socialexplorer.com), follow these steps:
+To access Social Explorer, you will need to be either on the campus network, operating through the [campus VPN](https://service.uoregon.edu/TDClient/2030/Portal/KB/ArticleDet?ID=31471), or you will need to go to the [UO libraries page](https://library.uoregon.edu/), search for "social explorer", and then use the online access to load the site. From the [Social Explorer main page](https://www.socialexplorer.com), follow these steps:
 
-1.  Choose the "Tables" option and then "American Community Survey (5 year estimates)" and then "Begin Report" for ACS 2014-2018.
-
-2.  For geography type, select Census Tract (140).
-
-3.  Do not select a state. Highlight "All census tracts" and click "Add" then "Proceed to tables."
-
-4.  Select the following variables and then "Show results":
-
+1.  Go to the "Data Library" section from the menu on the left.
+2.  Choose "American Community Survey (5-year estimates)" from the choices available.
+3.  Click the "Begin Report" button.
+4.  Under "Select geographies" choose "140. Census Tracts" and then "All Census Tracts." Hit "Next" in the upper right.
+5.  Under "Select tables" choose the following and then "Create Report":
     -   A04001. Hispanic or Latino by race
-    -   A12001. Educational Attainment for Population 25 years or older.
+    -   A12002. Highest Educational Attainment for Population 25 years or older.
     -   A17005. Unemployment Rate for Civilian Population in Labor Force 16 years and over.
     -   A06001. Nativity by Citizenship status.
-
-5.  Look over the tables and make sure it looks good, and then click "Data Download". Choose output options "Output column labels in the first row" and then download the CSV file *and* the data dictionary for reference.
-
-6.  Place the downloaded files in the `input` directory of your project.
+6.  Look over the tables and make sure they look correct, and then click the CSV download icon on the right. Choose output options "Output column labels in the first row" and then download the CSV file *and* the data dictionary for reference.
+7.  Place the downloaded files in the `data/data_raw` directory of your project.
 
 ### Download IPUMS Data
 
@@ -145,13 +145,13 @@ Ultimately, we want to create a metro area level dataset with the following vari
 
 Furthermore, some metro areas had very small samples of either white or black respondents. In these cases, there is likely to be a lot of statistical noise in our estimation of the SEI differences. To address this problem, I want you to remove all metro areas that had fewer than 50 black or white respondents. This is crude but fairly effective. We will learn a better way to handle this kind of issue next term (spoiler: multilevel models).
 
-Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area using `group_by` and `summarize`. If you group by metro area and race at the same time, you will be able to use the  `mean()` and `n()` functions within the summarize to get the mean SEI and sample size, respectively, for each racial group in each metro.
+Our first step is to aggregate the individual level IPUMS data to the metro area level to get SEI differences by race for each metro area using `group_by` and `summarize`. If you group by metro area and race at the same time, you will be able to use the `mean()` and `n()` functions within the summarize to get the mean SEI and sample size, respectively, for each racial group in each metro.
 
 The next step is to reshape this aggregated data, which is in long format, to a wide format so that you can calculate the SEI difference between the mean of white and black respondents. Once you have calculated this value, you should restrict the dataset as described above and then remove all of the unneeded variables.
 
 ### Tract Data
 
-We want to aggregate the tract data for each metro area to construct four variables. 
+We want to aggregate the tract data for each metro area to construct four variables.
 
 -   `pct_black`: The percent of the population that is non-Hispanic black.
 -   `unemployment`: The unemployment rate, which is the percent of the labor force that is unemployed.
@@ -179,16 +179,16 @@ Where $a_i$ is the number of group a members that live in census tract $i$ and $
 Here are the following logical steps that need to be performed to calculate the dissimilarity index:
 
 1.  Calculate the distributions of each racial group across the city ($a_i/A$ and $b_i/B$). T
-3.  Subtract one of the distributions from (1) from the other and take the absolute value with the `abs` function.
-4.  Sum up the values from (3) and multiply by 50.
+2.  Subtract one of the distributions from (1) from the other and take the absolute value with the `abs` function.
+3.  Sum up the values from (3) and multiply by 50.
 
 To calculate this measure for all cities in your tracts data, you must do the following:
 
 1.  Create a `calculate_dissimilarity` function that when given a dataset of tracts, will compute the dissimilarity index and return the results.
 2.  A for-loop or `sapply` command that uses the function above to actually calculate dissimilarity for each metropolitan area.
 3.  Create a `tibble` of dissimilarity indices from the results of (2). This dataset should have two variables:
-    *  `met2013` to identify metropolitan areas
-    *  `dissim_index` for the actual dissimilarity index in each metropolitan area.
+    -   `met2013` to identify metropolitan areas
+    -   `dissim_index` for the actual dissimilarity index in each metropolitan area.
 4.  Merge this new data.frame with the combined `met_area` data.frame you constructed in the previous assignment.
 
 You should now have a final analytical dataset. it should be named `met_area`. You should save this as `met_area.RData` in the `output` directory with the `save` command. We are now done with the `organize_data.R` script.
