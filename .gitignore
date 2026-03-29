@@ -1,5 +1,32 @@
-**/.Rhistory
-**/.RData
-**/.DS_Store
+# files added by usethis::git_vaccinate
+.httr-oauth
 .Rproj.user
+.Rhistory
+.Rdata
+.DS_Store
 
+# MS Office temp files
+**/~$*.doc*
+**/*.doc*~
+**/~$*.xls*
+**/*.xls*~
+
+# Other junk files
+desktop.ini
+
+# Ignore all the junk created by LaTeX
+*.aux
+*.out
+*.bbl
+*.ent
+*.log
+
+# Ignore quarto stuff
+/.quarto/
+**/*.quarto_ipynb
+
+# Ignore quarto output
+*_files
+*.html
+*.pdf
+*.docx

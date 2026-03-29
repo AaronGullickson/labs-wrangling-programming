@@ -12,9 +12,9 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
-load("output/met_area.RData")
-library(ggplot2)
-library(texreg)
+
+source("check_packages.R")
+#load("data/data_constructed/met_area.RData")
 ```
 
 # Introduction
@@ -35,7 +35,7 @@ Show how the key independent and dependent variables are distributed. Use graphi
 #| label: fig-template
 #| fig-cap: A Caption
 
-# Code for the figure below. You should change the label from "fig-template" to something relevant but it should start with "fig-". You can then reference this figure in the tex with @fig-whatever-you-called-it
+# Code for a figure below. You should change the label from "fig-template" to something relevant but it should start with "fig-". You can then reference this figure in the tex with @fig-whatever-you-called-it
 
 # Each figure should go in a separate code chunk.
 # replace this code with a real figure
@@ -47,22 +47,27 @@ ggplot(mtcars, aes(x=cyl, y=mpg))+
 ```{r}
 #| label: tbl-reg
 #| tbl-cap: A Caption
-#| results: asis
 
 # build your models here - change these
 model1 <- lm(mpg~cyl+disp, data=mtcars)
 model2 <- lm(mpg~cyl+disp+hp, data=mtcars)
 model3 <- lm(mpg~cyl+disp+hp+wt, data=mtcars)
 
-#to print to screen replace texreg with screenreg
-texreg(list(model1, model2, model3),
-        #custom.coef.names = c("Covariate labels here"), #uncomment to add nice labels to independent variables
-        digits = 3,
-        caption.above=TRUE, 
-        include.rsquared=TRUE,
-        include.adjrs=FALSE,
-        include.nobs=TRUE,
-        include.rmse=FALSE)
+modelsummary(
+  # list of all models, you can add more
+  list(model1, model2, model3),
+  # necessary to work with quarto properly
+  output = "gt",  
+  # add stars to output
+  stars = TRUE,   
+  # number of decimals
+  fmt = 3,        
+  # which summary stats to keep
+  gof_map = c("nobs", "r.squared"),
+  # add values here where the left matches output exactly and the 
+  # right is the preferred label
+  coef_rename = c("(Intercept)" = "Intercept")
+)
 ```
 
 # Conclusions
